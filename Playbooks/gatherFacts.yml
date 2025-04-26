@@ -1,0 +1,121 @@
+- name: Gather Facts from Devices
+  hosts: routers,LAN2
+  gather_facts: no
+
+  tasks:
+    - name: Gather facts (hostname, interfaces, version)
+      ios_facts:
+        gather_subset:
+          - default
+          - interfaces
+      register: facts
+    
+    - name: Hostname
+      debug:
+        msg: "Hostname: {{ facts.ansible_facts.ansible_net_hostname }}"
+    
+    - name: Version
+      debug:
+        msg: "Version: {{ facts.ansible_facts.ansible_net_version }}"
+    
+    - name: Interfaces
+      debug:
+        msg: "Interfaces: {{ facts.ansible_facts.ansible_net_interfaces }}"
+    
+    - name: Gather Uptime
+      ios_command:
+        commands:
+          - show version | include uptime
+      register: uptime_output
+
+    - name: Display Uptime
+      debug:
+        msg: "Uptime: {{ uptime_output.stdout[0] }}"
+
+    - name: Save only hostname to a YAML file
+      local_action:
+        module: copy
+        content: |
+          hostname: "{{ facts.ansible_facts.ansible_net_hostname }}"
+          version: "{{ facts.ansible_facts.ansible_net_version }}"
+          Uptime: "{{ uptime_output.stdout[0] }}"
+        dest: "./hostname_{{ inventory_hostname }}.yml"
+
+#TASK [Hostname] ****************************************************************
+#ok: [R1] => {
+#    "msg": "Hostname: R1"
+#}
+#ok: [R2] => {
+#    "msg": "Hostname: R2"
+#}
+#ok: [R3] => {
+#    "msg": "Hostname: R3"
+#}
+#ok: [LAN2] => {
+#    "msg": "Hostname: Switch"
+#}
+#
+#TASK [Version] *****************************************************************
+#ok: [R3] => {
+#    "msg": "Version: 15.2(4)S5"
+#}
+#ok: [LAN2] => {
+#    "msg": "Version: 15.1(20130726:213425)"
+#}
+#ok: [R2] => {
+#    "msg": "Version: 15.4(1)T"
+#}
+#ok: [R1] => {
+#    "msg": "Version: 15.4(1)T"
+#}
+#
+#TASK [Gather Uptime] ***********************************************************
+#ok: [R2]
+#ok: [LAN2]
+#ok: [R3]
+#ok: [R1]
+#
+#TASK [Display Uptime] **********************************************************
+#ok: [R1] => {
+#    "msg": "Uptime: R1 uptime is 3 hours, 54 minutes"
+#}
+#ok: [R2] => {
+#    "msg": "Uptime: R2 uptime is 3 hours, 54 minutes"
+#}
+#ok: [R3] => {
+#    "msg": "Uptime: R3 uptime is 3 hours, 54 minutes"
+#}
+#ok: [LAN2] => {
+#    "msg": "Uptime: Switch uptime is 3 hours, 54 minutes"
+#}
+#
+#TASK [Save only hostname to a YAML file] ***************************************
+#changed: [R3 -> localhost]
+#changed: [R1 -> localhost]
+#changed: [LAN2 -> localhost]
+#changed: [R2 -> localhost]
+#
+#PLAY RECAP *********************************************************************
+#LAN2                       : ok=6    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+#R1                         : ok=6    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+#R2                         : ok=6    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+#R3                         : ok=6    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+#
+#
+#ls
+#gatherFacts.yml    hostname_R1.yml  hostname_R3.yml
+#hostname_LAN2.yml  hostname_R2.yml  ping.yml
+#cat hostname_*
+#hostname: "Switch"
+#version: "15.1(20130726:213425)"
+#Uptime: "Switch uptime is 3 hours, 54 minutes"
+#hostname: "R1"
+#version: "15.4(1)T"
+#Uptime: "R1 uptime is 3 hours, 54 minutes"
+#hostname: "R2"
+#version: "15.4(1)T"
+#Uptime: "R2 uptime is 3 hours, 54 minutes"
+#hostname: "R3"
+#version: "15.2(4)S5"
+#Uptime: "R3 uptime is 3 hours, 54 minutes"
+

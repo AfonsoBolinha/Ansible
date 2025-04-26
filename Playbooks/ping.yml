@@ -25,3 +25,5 @@
 #R2                         : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 #R3                         : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
+# In this example its used ping, this is not a real ping, it just checks if the device is reachable, thus dosnt use ICMP.
+# To use ICMP it would require "ios_ping" module.
