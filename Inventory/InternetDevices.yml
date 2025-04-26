@@ -1,0 +1,24 @@
+[routers]
+R1 ansible_host=192.168.1.254
+R2 ansible_host=192.168.2.254
+R3 ansible_host=192.168.32.1
+
+[switches]
+LAN1 ansible_host=192.168.1.253
+LAN2 ansible_host=192.168.2.253
+
+[routers:vars]
+ansible_user=admin
+ansible_password=admin
+ansible_connection=network_cli
+ansible_network_os=ios
+
+[switches:vars]
+ansible_user=admin
+ansible_password=admin
+ansible_connection=network_cli
+ansible_network_os=ios
+
+[devices:children]
+routers
+switches

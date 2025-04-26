@@ -1,0 +1,27 @@
+- name: Pinging
+  hosts: devices
+  gather_facts: no
+
+  tasks:
+    - name: Ping Devices
+      ping:
+        
+
+#OUTPUT
+
+#PLAY [Pinging] *****************************************************************
+#
+#TASK [Ping Devices] ************************************************************
+#ok: [R2]
+#ok: [LAN2]
+#ok: [R1]
+#ok: [LAN1]
+#ok: [R3]
+#
+#PLAY RECAP *********************************************************************
+#LAN1                       : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+#LAN2                       : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+#R1                         : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+#R2                         : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+#R3                         : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
