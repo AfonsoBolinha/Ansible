@@ -1,0 +1,72 @@
+- name: Hostname Configurater
+  hosts: routers,LAN2
+  gather_facts: no
+  become: yes
+  become_method: enable
+
+  tasks:
+    - name: Gather Hostname
+      ios_facts:
+        gather_subset:
+          - default
+      register: facts
+
+    - name: Display Hostname
+      debug:
+        msg: "Hostname: {{ facts.ansible_facts.ansible_net_hostname }}"
+
+    - name: Change Hostname
+      ios_config:
+        lines:
+          - hostname {{ inventory_hostname }}
+
+    - name: Gather Modified Hostname
+      ios_facts:
+        gather_subset:
+          - default
+      register: facts
+
+    - name: Display Modified Hostname
+      debug:
+        msg: "Hostname: {{ facts.ansible_facts.ansible_net_hostname }}"
+
+
+#TASK [Gather Hostname] *********************************************************
+#[WARNING]: default value for `gather_subset` will be changed to `min` from
+#`!config` v2.11 onwards
+#ok: [R2-MOD]
+#ok: [R3-MOD]
+#ok: [R1-MOD]
+#
+#TASK [Display Hostname] ********************************************************
+#ok: [R2-MOD] => {
+#    "msg": "Hostname: R2"
+#}
+#ok: [R3-MOD] => {
+#    "msg": "Hostname: R3"
+#}
+#ok: [R1-MOD] => {
+#    "msg": "Hostname: R1"
+#}
+#
+#TASK [Change Hostname] *********************************************************
+#changed: [R3-MOD]
+#changed: [R2-MOD]
+#changed: [R1-MOD]
+#
+#TASK [Gather Modified Hostname] ************************************************
+#ok: [R2-MOD]
+#ok: [R3-MOD]
+#ok: [R1-MOD]
+#
+#TASK [Display Modified Hostname] ***********************************************
+#ok: [R1-MOD] => {
+#    "msg": "Hostname: R1-MOD"
+#}
+#ok: [R2-MOD] => {
+#    "msg": "Hostname: R2-MOD"
+#}
+#ok: [R3-MOD] => {
+#    "msg": "Hostname: R3-MOD"
+#}
+
