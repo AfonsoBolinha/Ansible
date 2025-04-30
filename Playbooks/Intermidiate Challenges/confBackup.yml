@@ -1,0 +1,18 @@
+- name: Saving Configurations
+  hosts: devices
+  gather_facts: no
+  become: yes
+  become_method: enable
+
+  tasks:
+    - name: "Get running configuration"
+      ios_command:
+        commands:
+          - "show run"
+      register: running_config
+    
+    - name: Save running config to local file
+      copy:
+        content: "{{ running_config.stdout[0] }}"
+        dest: "~/.Backups/{{ inventory_hostname }}_config.txt"
+      delegate_to: localhost

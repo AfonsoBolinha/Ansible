@@ -1,0 +1,38 @@
+- name: "VLAN Playbook"
+  hosts: switches
+  gather_facts: no
+  become: yes
+  become_method: enable
+
+  vars: 
+    vlan_list:
+      - vlan_id: 10
+        name: VLAN10
+      - vlan_id: 20
+        name: VLAN20
+      - vlan_id: 30
+        name: VLAN30
+
+  tasks:
+    - name: "Create VLANs"
+      ios_config:
+        lines:
+          - "vlan {{ item.vlan_id }}"
+          - "name {{ item.name }}"
+        parents: "vlan {{ item.vlan_id }}"
+        match: exact
+      loop: "{{ vlan_list }}"
+      
+
+    - name: "Shutdown VLAN interfaces if they exist"
+      ios_config:
+        lines:
+          - shutdown
+        parents: "interface vlan {{ item.vlan_id }}"
+        match: line  # Optional, helps with idempotency
+        replace: line  # Optional, ensures the 'shutdown' line is enforced
+      loop: "{{ vlan_list }}"
+    
+    - name: "Save configuration"
+      ios_config:
+        save_when: modified  # Save only if there are changes
