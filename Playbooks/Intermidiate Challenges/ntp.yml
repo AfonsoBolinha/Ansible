@@ -22,6 +22,7 @@
         var: ntp_status.stdout_lines
 
 
+# For this one was first created on the main machine a NTP server with chrony
 
 #PLAY [NTP Configuration] *******************************************************
 #
