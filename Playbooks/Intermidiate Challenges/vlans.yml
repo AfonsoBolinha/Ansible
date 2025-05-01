@@ -29,10 +29,32 @@
         lines:
           - shutdown
         parents: "interface vlan {{ item.vlan_id }}"
-        match: line  # Optional, helps with idempotency
-        replace: line  # Optional, ensures the 'shutdown' line is enforced
+        match: line
+        replace: line  
       loop: "{{ vlan_list }}"
     
     - name: "Save configuration"
       ios_config:
-        save_when: modified  # Save only if there are changes
+        save_when: modified 
+
+
+#TASK [Create VLANs] ************************************************************
+#changed: [LAN2] => (item={'vlan_id': 10, 'name': 'VLAN10'})
+#changed: [LAN1] => (item={'vlan_id': 10, 'name': 'VLAN10'})
+#changed: [LAN2] => (item={'vlan_id': 20, 'name': 'VLAN20'})
+#changed: [LAN2] => (item={'vlan_id': 30, 'name': 'VLAN30'})
+#changed: [LAN1] => (item={'vlan_id': 20, 'name': 'VLAN20'})
+#changed: [LAN1] => (item={'vlan_id': 30, 'name': 'VLAN30'})
+#
+#TASK [Shutdown VLAN interfaces if they exist] **********************************
+#changed: [LAN2] => (item={'vlan_id': 10, 'name': 'VLAN10'})
+#changed: [LAN1] => (item={'vlan_id': 10, 'name': 'VLAN10'})
+#changed: [LAN2] => (item={'vlan_id': 20, 'name': 'VLAN20'})
+#changed: [LAN1] => (item={'vlan_id': 20, 'name': 'VLAN20'})
+#changed: [LAN2] => (item={'vlan_id': 30, 'name': 'VLAN30'})
+#changed: [LAN1] => (item={'vlan_id': 30, 'name': 'VLAN30'})
+#
+#TASK [Save configuration] ******************************************************
+#changed: [LAN2]
+#changed: [LAN1]
+

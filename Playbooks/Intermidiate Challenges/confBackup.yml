@@ -16,3 +16,22 @@
         content: "{{ running_config.stdout[0] }}"
         dest: "~/.Backups/{{ inventory_hostname }}_config.txt"
       delegate_to: localhost
+
+#PLAY [Saving Configurations] ***************************************************
+#
+#TASK [Save running configuration to startup configuration] *********************
+#ok: [LAN2]
+#ok: [R2]
+#ok: [R1]
+#ok: [LAN1]
+#ok: [R3]
+#
+#TASK [Save running config to local file] ***************************************
+#changed: [R3 -> localhost]
+#changed: [R2 -> localhost]
+#changed: [LAN1 -> localhost]
+#changed: [R1 -> localhost]
+#changed: [LAN2 -> localhost]
+
+#ls ~/.Backups/
+#LAN1_config.txt  LAN2_config.txt  R1_config.txt  R2_config.txt  R3_config.txt
