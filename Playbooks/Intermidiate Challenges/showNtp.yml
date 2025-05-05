@@ -1,60 +1,35 @@
-- name: NTP Configuration
+- name: Show NTP
   hosts: devices
   gather_facts: no
   become: yes
   become_method: enable
 
   tasks:
-  
-    - name: Configure NTP server
-      ios_config:
-        lines:
-          - "ntp server 192.168.2.2 prefer"
-        match: exact
-        
-
     - name: Check NTP status
       ios_command:
         commands:
-          - "show ntp associations"
+          - show ntp associations
       register: ntp_status
 
     - name: Display NTP sync status
       debug:
         var: ntp_status.stdout_lines
 
-
-# For this one was first created on the main machine a NTP server with chrony
-
-#TASK [Configure NTP server] ****************************************************
-#changed: [LAN2]
-#changed: [R1-T]
-#changed: [LAN1]
-#changed: [R2]
-#changed: [R3]
-#
-#TASK [Check NTP status] ********************************************************
-#ok: [R3]
-#ok: [LAN2]
-#ok: [R2]
-#ok: [R1-T]
-#ok: [LAN1]
-#
 #TASK [Display NTP sync status] *************************************************
-#ok: [R2] => {
-#    "ntp_status.stdout_lines": [
-#        [
-#            "address         ref clock       st   when   poll reach  delay  offset   disp",
-#            " ~192.168.2.2     127.127.1.1      8      1     64     1  2.854 -1815.4 7937.9",
-#            " * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured"
-#        ]
-#    ]
-#}
 #ok: [R1-T] => {
 #    "ntp_status.stdout_lines": [
 #        [
 #            "address         ref clock       st   when   poll reach  delay  offset   disp",
-#            " ~192.168.2.2     .STEP.          16      0     64     0  0.000   0.000 16000.",
+#            "*~192.168.2.2     127.127.1.1      8    116     64     1  1.852 -1816.5 7937.9",
+#            " * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured"
+#        ]
+#    ]
+#}
+#ok: [R2] => {
+#    "ntp_status.stdout_lines": [
+#        [
+#            "address         ref clock       st   when   poll reach  delay  offset   disp",
+#            "*~192.168.2.2     127.127.1.1      8    116     64     1  1.852 -1816.8 7937.9",
 #            " * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured"
 #        ]
 #    ]
@@ -63,7 +38,7 @@
 #    "ntp_status.stdout_lines": [
 #        [
 #            "address         ref clock       st   when   poll reach  delay  offset   disp",
-#            " ~192.168.2.2     127.127.1.1      8      0     64     1  2.322  -3.850 7937.5",
+#            "*~192.168.2.2     127.127.1.1      8     14     64    37  3.850  -4.731  3.664",
 #            " * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured"
 #        ]
 #    ]
@@ -72,7 +47,7 @@
 #    "ntp_status.stdout_lines": [
 #        [
 #            "address         ref clock       st   when   poll reach  delay  offset   disp",
-#            "*~192.168.2.2     127.127.1.1      8      0     64     1  1.863 -1815.8 7937.9",
+#            "*~192.168.2.2     127.127.1.1      8    116     64     1  2.852 -1816.6 7937.9",
 #            " * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured"
 #        ]
 #    ]
@@ -81,9 +56,8 @@
 #    "ntp_status.stdout_lines": [
 #        [
 #            "address         ref clock       st   when   poll reach  delay  offset   disp",
-#            "*~192.168.2.2     127.127.1.1      8      0     64     1  1.693 -1815.8 7937.9",
+#            "*~192.168.2.2     127.127.1.1      8    116     64     1  0.911 -1817.0 7937.9",
 #            " * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured"
 #        ]
 #    ]
 #}
-
